@@ -14,6 +14,6 @@ def do_pack():
     archive_name = 'web_static_{}{}{}{}{}{}'.format(
         now.year, now.month, now.day, now.hour, now.minute, now.second)
     local('mkdir -p versions')
-    if local('tar -cvzf versions/{}.tgz web_static'.format(
+    if local('tar -cvzf versions/{}.tgz web_static/.'.format(
             archive_name)).succeeded:
         return('versions/{}.tgz'.format(archive_name))
