@@ -29,11 +29,21 @@ file { '/data/web_static/releases/test/index.html':
 </html>
 ',
   require => Package['nginx'],
+  owner   =>  'ubuntu',
+  group   =>  'ubuntu',
 }
 
+exec { 'delete link':
+  command => '/bin/rm -rf /data/web_static/current',
+}
+
+
 file { '/data/web_static/current':
-  ensure =>  link,
-  target =>  '/data/web_static/releases/test/',
+  ensure  =>  link,
+  target  =>  '/data/web_static/releases/test/',
+  require => Exec['delete link'],
+  owner   =>  'ubuntu',
+  group   =>  'ubuntu',
 }
 
 file_line { 'index':

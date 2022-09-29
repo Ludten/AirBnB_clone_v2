@@ -13,7 +13,7 @@ if [ ! -L "$link" ]
 then
 	ln -s /data/web_static/releases/test/ "$link"
 else
-	rm "$link"
+	rm -f "$link"
 	ln -s /data/web_static/releases/test/ "$link"
 fi
 chown -R ubuntu /data/
