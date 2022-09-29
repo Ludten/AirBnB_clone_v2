@@ -30,10 +30,7 @@ def do_deploy(archive_path):
         return False
     if run('rm -rf /tmp/{}'.format(com_file)):
         return False
-    if run('rm -rf /data/web_static/current'):
-        return False
-
-    if run('ln -s /data/web_static/releases/{}/ /data/web_static/current'.
+    if run('ln -sf /data/web_static/releases/{}/ /data/web_static/current'.
            format(file)):
         return False
     return True
