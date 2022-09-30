@@ -8,18 +8,15 @@ package { 'nginx':
   require => Exec['apt-get-update'],
 }
 
-file { [  '/data/',
+-> file { [  '/data/',
           '/data/web_static/',
           '/data/web_static/releases/',
           '/data/web_static/shared/',
           '/data/web_static/releases/test/', ] :
   ensure  =>  directory,
-  recurse =>  true,
-  owner   =>  'ubuntu',
-  group   =>  'ubuntu',
 }
 
-file { '/data/web_static/releases/test/index.html':
+-> file { '/data/web_static/releases/test/index.html':
   content => '<html>
   <head>
   </head>
@@ -29,8 +26,6 @@ file { '/data/web_static/releases/test/index.html':
 </html>
 ',
   require => Package['nginx'],
-  owner   =>  'ubuntu',
-  group   =>  'ubuntu',
 }
 
 exec { 'delete link':
@@ -38,15 +33,17 @@ exec { 'delete link':
 }
 
 
-file { '/data/web_static/current':
+-> file { '/data/web_static/current':
   ensure  =>  link,
   target  =>  '/data/web_static/releases/test/',
   require => Exec['delete link'],
-  owner   =>  'ubuntu',
-  group   =>  'ubuntu',
 }
 
-file_line { 'index':
+-> exec {'own':
+  command => '/usr/bin/env chown -R ubuntu:ubuntu /data/',
+}
+
+-> file_line { 'index':
   ensure  => present,
   path    => '/etc/nginx/sites-available/default',
   after   => 'server_name _;',
@@ -57,8 +54,7 @@ file_line { 'index':
   require => Package['nginx'],
 }
 
-
-service { 'nginx':
+-> service { 'nginx':
   ensure  => running,
   require => Package['nginx'],
 }
