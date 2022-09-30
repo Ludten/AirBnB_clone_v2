@@ -1,60 +1,28 @@
 # configure an nginx web server
 exec { 'apt-get-update':
-  command => '/usr/bin/apt-get update',
+  command => '/usr/bin/env apt-get -y update',
 }
-
-package { 'nginx':
-  ensure  => installed,
-  require => Exec['apt-get-update'],
+-> exec {'nginx':
+  command => '/usr/bin/env apt-get -y install nginx',
 }
-
--> file { [  '/data/',
-          '/data/web_static/',
-          '/data/web_static/releases/',
-          '/data/web_static/shared/',
-          '/data/web_static/releases/test/', ] :
-  ensure  =>  directory,
+-> exec {'test folder':
+  command => '/usr/bin/env mkdir -p /data/web_static/releases/test/',
 }
-
--> file { '/data/web_static/releases/test/index.html':
-  content => '<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>
-',
-  require => Package['nginx'],
+-> exec {'shared folder':
+  command => '/usr/bin/env mkdir -p /data/web_static/shared/',
 }
-
-exec { 'delete link':
-  command => '/bin/rm -rf /data/web_static/current',
+-> exec {'index':
+  command => '/usr/bin/env echo "Holberton School" > /data/web_static/releases/test/index.html',
 }
-
-
--> file { '/data/web_static/current':
-  ensure  =>  link,
-  target  =>  '/data/web_static/releases/test/',
-  require => Exec['delete link'],
+-> exec {'ln -s':
+  command => '/usr/bin/env ln -sf /data/web_static/releases/test /data/web_static/current',
 }
-
--> exec {'own':
-  command => '/usr/bin/env chown -R ubuntu:ubuntu /data/',
+-> exec {'nginx conf':
+  command => '/usr/bin/env sed -i "/listen 80 default_server/a location /hbnb_static/ { alias /data/web_static/current/;}" /etc/nginx/sites-available/default',
 }
-
--> file_line { 'index':
-  ensure  => present,
-  path    => '/etc/nginx/sites-available/default',
-  after   => 'server_name _;',
-  line    => ' location /hbnb_static/ {
-                alias /data/web_static/current/;
-        }
-        ',
-  require => Package['nginx'],
+-> exec {'chown:':
+  command => '/usr/bin/env chown -R ubuntu:ubuntu /data',
 }
-
--> service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+-> exec {'service':
+  command => '/usr/bin/env service nginx restart',
 }
