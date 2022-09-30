@@ -26,6 +26,12 @@ def do_deploy(archive_path):
         return False
     if run('rm -rf /tmp/{}'.format(com_file)).failed:
         return False
+    if run('mv /data/web_static/releases/{}/web_static/* \
+/data/web_static/releases/{}/'.format(file, file)).failed:
+        return False
+    if run('rm -rf /data/web_static/releases/{}/web_static'.
+           format(file)).failed:
+        return False
     if run('rm -rf /data/web_static/current').failed:
         return False
 
