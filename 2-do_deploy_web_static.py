@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # A fabfile that distributes an archive to your web servers
 
-from fabric.api import run, env, put
+from fabric.api import put
+from fabric.api import run
+from fabric.api import env
 import os.path
 
 
@@ -24,7 +26,7 @@ def do_deploy(archive_path):
     if run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'.format(
             com_file, file)).failed:
         return False
-    if run('rm -rf /tmp/{}'.format(com_file)).failed:
+    if run('rm /tmp/{}'.format(com_file)).failed:
         return False
     if run('mv /data/web_static/releases/{}/web_static/* \
 /data/web_static/releases/{}/'.format(file, file)).failed:
