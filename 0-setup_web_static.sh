@@ -8,5 +8,5 @@ echo -e "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\tHolberton School\n\t</body>\
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu /data/
 sblock="\\n\\n\\tlocation\ \/hbnb_static\/\ {\\n\\t\\talias\ \/data\/web_static\/current\/;\\n\\t}\\n"
-sudo sed -i "/listen 80 default_server/a $sblock/" /etc/nginx/sites-available/default
+sudo sed -i "/server_name _;/a $sblock" /etc/nginx/sites-available/default
 service nginx restart
