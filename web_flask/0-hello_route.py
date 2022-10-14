@@ -1,12 +1,18 @@
 #!/usr/bin/python3
-# A Minimal Application
+"""
+A Minimal Application
+"""
 
 from flask import Flask
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello_world():
+def hello_hbnb():
+    """
+    A function for routing requests passed to
+    '/'
+    """
     return 'Hello HBNB!'
 
 
