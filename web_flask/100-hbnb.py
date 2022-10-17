@@ -24,7 +24,7 @@ def hbnb():
     amenities = list(storage.all(Amenity).values())
     places = list(storage.all(Place).values())
     users = list(storage.all(User).values())
-    return render_template('10-hbnb_filters.html', storage=states,
+    return render_template('100-hbnb.html', storage=states,
                            amenities=amenities, places=places,
                            users=users)
 
